@@ -5,3 +5,4 @@ install node.js
 install npm
 
 then npm install vite
+then run npx vite
