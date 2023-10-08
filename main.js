@@ -153,6 +153,3 @@ window.addEventListener('keydown', (event) =>{
 });
 
 render();
-
-
-
