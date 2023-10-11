@@ -1,8 +1,9 @@
 # webglthreejs
 
 how to run:
-install node.js
-install npm
+install node.js ( install exe from node.js' webpage)
 
-then npm install vite
-then run npx vite
+install npm by "npm install -g npm" in the command line
+then "npm install vite" in the command line
+then "npx vite" in the command line
+finally open the localhost url
