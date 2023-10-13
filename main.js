@@ -5,6 +5,8 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 // sliderlar için gui
 import {GUI} from 'dat.gui'
 
+import Stats from "three/addons/libs/stats.module";
+
 const WIDTH = window.innerWidth;
 const HEIGHT = window.innerHeight;
 
@@ -16,7 +18,7 @@ const renderer = new THREE.WebGLRenderer({powerPreference: "high-performance"});
 camera.position.z = 50; // uzaklık
 
 renderer.setSize( window.innerWidth, window.innerHeight );
-renderer.setClearColor(0x444444, 1); // arkaplan rengi
+renderer.setClearColor(0x000000, 1); // arkaplan rengi
 document.body.appendChild( renderer.domElement );
 
 // küp
@@ -82,46 +84,69 @@ gui.add(pl.position, 'x', -100, 100);
 gui.add(pl.position, 'y', -100, 100);
 gui.add(pl.position, 'z', -100, 100);
 
+const hehe = glMatrix.mat4.create();
+
+let t = 0; // for rotation
 
 // fps counter
-var fps = document.getElementById("fps");
-var startTime = Date.now();
-var frame = 0;
+const stats = new Stats();
+stats.showPanel(0);
+document.body.appendChild(stats.dom);
 
-function tick() {
-  window.requestAnimationFrame(tick);
+// star background
+const stars = new Array(0);
+for ( let i = 0; i < 10000; i ++ ) {
+    let x = THREE.MathUtils.randFloatSpread( 2000 );
+    let y = THREE.MathUtils.randFloatSpread( 2000 );
+    let z = THREE.MathUtils.randFloatSpread( 2000 );
+    stars.push(x, y, z);
 }
 
-let t = 0;
+
+
+const starsGeometry = new THREE.BufferGeometry();
+// yuvarlak yıldız için texture
+const sprite = new THREE.TextureLoader().load('public/star.png');
+sprite.colorSpace = THREE.SRGBColorSpace;
+
+starsGeometry.setAttribute(
+    "position", new THREE.Float32BufferAttribute(stars, 3)
+);
+
+// size veya sizeattentuation gerekli
+const starsMaterial = new THREE.PointsMaterial( { color: 0xffffff, map: sprite, transparent: true, size: 1, sizeAttenuation: true} );
+const spacebackground = new THREE.Points( starsGeometry, starsMaterial );
+scene.add(spacebackground);
+
+
+// render function
 function render() {
-    
-    requestAnimationFrame(render); // re renders constantly on every frame
+    const tick = () =>{
+        stats.begin();
 
-    var time = Date.now();
-    frame++;
-    if (time - startTime > 1000) {
-        fps.innerHTML = (frame / ((time - startTime) / 1000)).toFixed(1);
-        startTime = time;
-        frame = 0;
-    }
+        requestAnimationFrame(render); // re renders constantly on every frame
 
-    cube.rotation.x += 0.005;
-    cube.rotation.y += 0.005;
-    cube.rotation.z += 0.005;
-    //cube.rotation.set(0.4, 0.2, 0); yönünü çeviriyo; statik
+        cube.rotation.x += 0.005;
+        cube.rotation.y += 0.005;
+        cube.rotation.z += 0.005;
 
-    t += 0.01;
-    // torus.scale.y = Math.abs(Math.sin(t));
-    // dodecahedron.position.y = -7 * Math.sin(t);
+        //cube.rotation.set(0.4, 0.2, 0); yönünü çeviriyo; statik
 
-    controls.update(); // mouse update
-    renderer.render( scene, camera );
+        t += 0.01;
+
+        // torus.scale.y = Math.abs(Math.sin(t));
+        // dodecahedron.position.y = -7 * Math.sin(t);
+
+        controls.update(); // mouse update
+        renderer.render( scene, camera );
+
+        stats.end();
+        }
+    tick();
 }
-tick();
-//
-// document.getElementById("küp").innerHTML = cube.position.x + ", " + cube.position.y + ", " + cube.position.z;
-// document.getElementById("yuvarlak").innerHTML = torus.position.x + ", " + torus.position.y + ", " + torus.position.z;
 
+
+// controls
 window.addEventListener('keydown', (event) =>{
     switch (event.code){
         case 'KeyA':
