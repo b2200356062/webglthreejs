@@ -33,7 +33,7 @@ const cube = new THREE.Mesh(geometry, material);
 scene.add(cube);
 // scene.add(camera); optional gibimsi
 
-cube.position.x = 0;
+cube.position.x = -10;
 
 // torus?? objesi
 const torusGeometry = new THREE.TorusGeometry(7,1,6,12);
@@ -62,7 +62,7 @@ scene.add(plane);
 const dodecahedronGeometry = new THREE.DodecahedronGeometry(7);
 const lambertMaterial = new THREE.MeshLambertMaterial({ color: 0xdddddd});
 const dodecahedron = new THREE.Mesh(dodecahedronGeometry, lambertMaterial);
-dodecahedron.position.x = 25;
+dodecahedron.position.x = 10;
 scene.add(dodecahedron);
 
 // directional light
@@ -129,6 +129,10 @@ function render() {
         cube.rotation.x += 0.005;
         cube.rotation.y += 0.005;
         cube.rotation.z += 0.005;
+
+        dodecahedron.rotation.x += 0.01;
+        dodecahedron.rotation.y += 0.01;
+        dodecahedron.rotation.z += 0.01;
 
         //cube.rotation.set(0.4, 0.2, 0); yönünü çeviriyo; statik
 
