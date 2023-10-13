@@ -105,7 +105,7 @@ for ( let i = 0; i < 10000; i ++ ) {
 
 const starsGeometry = new THREE.BufferGeometry();
 // yuvarlak yıldız için texture
-const sprite = new THREE.TextureLoader().load('public/star.png');
+const sprite = new THREE.TextureLoader().load('/star.png');
 sprite.colorSpace = THREE.SRGBColorSpace;
 
 starsGeometry.setAttribute(
