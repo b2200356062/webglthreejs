@@ -25,7 +25,7 @@ document.body.appendChild( renderer.domElement );
 const geometry = new THREE.BoxGeometry( 10, 10, 10 );
 
 // what covers an object; color, texture etc.
-const material = new THREE.MeshLambertMaterial({ color: 0xdddddd }); // parametreler {} içinde veriliyor.
+const material = new THREE.MeshLambertMaterial({ color: 0x0000ff }); // parametreler {} içinde veriliyor.
 
 // mesh: to apply material to a geometry;
 const cube = new THREE.Mesh(geometry, material);
@@ -43,7 +43,7 @@ const torus = new THREE.Mesh(torusGeometry, phongMaterial);
 
 // küre
 const sphere = new THREE.SphereGeometry(7, 30, 30);
-const sphereMaterial = new THREE.MeshLambertMaterial({color: 0x555555});
+const sphereMaterial = new THREE.MeshLambertMaterial({color: 0xffff00});
 const sphereMesh = new THREE.Mesh(sphere, sphereMaterial);
 sphereMesh.position.x = 0;
 sphereMesh.position.y = 20;
@@ -60,7 +60,7 @@ scene.add(plane);
 
 // dodecahedron
 const dodecahedronGeometry = new THREE.DodecahedronGeometry(7);
-const lambertMaterial = new THREE.MeshLambertMaterial({ color: 0xdddddd});
+const lambertMaterial = new THREE.MeshLambertMaterial({ color: 0xdd00ff});
 const dodecahedron = new THREE.Mesh(dodecahedronGeometry, lambertMaterial);
 dodecahedron.position.x = 10;
 scene.add(dodecahedron);
@@ -84,7 +84,8 @@ gui.add(pl.position, 'x', -100, 100);
 gui.add(pl.position, 'y', -100, 100);
 gui.add(pl.position, 'z', -100, 100);
 
-const hehe = glMatrix.mat4.create();
+
+//const hehe = glMatrix.mat4.create();
 
 let t = 0; // for rotation
 
@@ -101,8 +102,6 @@ for ( let i = 0; i < 10000; i ++ ) {
     let z = THREE.MathUtils.randFloatSpread( 2000 );
     stars.push(x, y, z);
 }
-
-
 
 const starsGeometry = new THREE.BufferGeometry();
 // yuvarlak yıldız için texture
