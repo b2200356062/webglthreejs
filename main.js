@@ -1,11 +1,14 @@
 // three js lib
 import * as THREE from 'three'
 // kamera kontrolleri
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js'
 // sliderlar için gui
 import {GUI} from 'dat.gui'
-
+// 3d model loader
+import {GLTFLoader} from "three/addons/loaders/GLTFLoader";
+// fps counter
 import Stats from "three/addons/libs/stats.module";
+
 
 const WIDTH = window.innerWidth;
 const HEIGHT = window.innerHeight;
@@ -21,6 +24,17 @@ renderer.setSize( window.innerWidth, window.innerHeight );
 renderer.setClearColor(0x000000, 1); // arkaplan rengi
 document.body.appendChild( renderer.domElement );
 
+const loader = new GLTFLoader();
+
+loader.load('Rocket.glb', function (gltf){
+    scene.add(gltf.scene);
+    gltf.asset;
+    gltf.scene.y = 10;
+    gltf.scene.scale.set(200,200,200);
+}, undefined, function (error){
+    console.log(error);
+} );
+
 // küp
 const geometry = new THREE.BoxGeometry( 10, 10, 10 );
 
@@ -33,7 +47,7 @@ const cube = new THREE.Mesh(geometry, material);
 scene.add(cube);
 // scene.add(camera); optional gibimsi
 
-cube.position.x = -10;
+cube.position.x = -20;
 
 // torus?? objesi
 const torusGeometry = new THREE.TorusGeometry(7,1,6,12);
@@ -55,14 +69,14 @@ const planeMaterial = new THREE.MeshLambertMaterial({color: 0x555555});
 const plane = new THREE.Mesh(planeGeometry, planeMaterial);
 // rotation olmazsa düzlem yerde olmuyor
 plane.rotation.x = -0.5 * Math.PI; 
-plane.position.y = -10;
+plane.position.y = -30;
 scene.add(plane);
 
 // dodecahedron
 const dodecahedronGeometry = new THREE.DodecahedronGeometry(7);
 const lambertMaterial = new THREE.MeshLambertMaterial({ color: 0xdd00ff});
 const dodecahedron = new THREE.Mesh(dodecahedronGeometry, lambertMaterial);
-dodecahedron.position.x = 10;
+dodecahedron.position.x = 20;
 scene.add(dodecahedron);
 
 // directional light
@@ -73,7 +87,10 @@ scene.add(dodecahedron);
 // point light
 const pl = new THREE.PointLight(0xffffff, 500);
 pl.position.set(0,30,6);
-scene.add(pl);
+//scene.add(pl);
+
+const ambientlight = new THREE.AmbientLight(0xffffff);
+scene.add(ambientlight);
 
 // mouse controls
 const controls = new OrbitControls(camera, renderer.domElement);
@@ -84,6 +101,12 @@ gui.add(pl.position, 'x', -100, 100);
 gui.add(pl.position, 'y', -100, 100);
 gui.add(pl.position, 'z', -100, 100);
 
+var conf = {
+    color: cube.material.color,
+}
+gui.addColor(conf, 'color').onChange( function (color){
+    cube.material.color.set(color);
+})
 
 //const hehe = glMatrix.mat4.create();
 
