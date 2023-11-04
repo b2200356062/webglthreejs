@@ -9,6 +9,9 @@ import {GLTFLoader} from "three/addons/loaders/GLTFLoader";
 // fps counter
 import Stats from "three/addons/libs/stats.module";
 
+import {FirstPersonControls} from "three/addons/controls/FirstPersonControls";
+
+import {FlyControls} from "three/addons/controls/FlyControls";
 
 const WIDTH = window.innerWidth;
 const HEIGHT = window.innerHeight;
@@ -17,6 +20,8 @@ const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera( 70, WIDTH / HEIGHT, 0.1, 1000 );
 const renderer = new THREE.WebGLRenderer({powerPreference: "high-performance"}); 
 // antialias: - 40 fps, kötü performans
+renderer.shadowMap.enabled = true;
+renderer.gammaOutput = true;
 
 camera.position.z = 50; // uzaklık
 
@@ -26,12 +31,13 @@ document.body.appendChild( renderer.domElement );
 
 const loader = new GLTFLoader();
 
-loader.load('Rocket.glb', function (gltf){
-    scene.add(gltf.scene);
-    gltf.asset;
-    gltf.scene.y = 10;
-    gltf.scene.scale.set(200,200,200);
-}, undefined, function (error){
+loader.load('Rocket.glb', function (glb){
+    scene.add(glb.scene);
+    glb.scene.y = 10;
+    glb.scene.scale.set(200,200,200);
+}, function (xhr){
+    console.log((xhr.loaded/xhr.total * 100) + " %100 loaded")
+}, function (error){
     console.log(error);
 } );
 
@@ -87,13 +93,15 @@ scene.add(dodecahedron);
 // point light
 const pl = new THREE.PointLight(0xffffff, 500);
 pl.position.set(0,30,6);
-//scene.add(pl);
+scene.add(pl);
 
 const ambientlight = new THREE.AmbientLight(0xffffff);
-scene.add(ambientlight);
+//scene.add(ambientlight);
 
 // mouse controls
-const controls = new OrbitControls(camera, renderer.domElement);
+const controls = new FlyControls(camera, renderer.domElement);
+controls.movementSpeed = 100;
+controls.rollSpeed = 1
 
 const gui = new GUI();
 
@@ -160,10 +168,10 @@ function render() {
 
         t += 0.01;
 
+        controls.update(0.007);
         // torus.scale.y = Math.abs(Math.sin(t));
         // dodecahedron.position.y = -7 * Math.sin(t);
-
-        controls.update(); // mouse update
+        // mouse update
         renderer.render( scene, camera );
 
         stats.end();
